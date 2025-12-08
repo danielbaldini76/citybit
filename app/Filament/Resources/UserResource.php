@@ -3,6 +3,7 @@
 namespace App\Filament\Resources;
 
 use App\Filament\Resources\UserResource\Pages;
+use App\Models\Role;
 use App\Models\User;
 use Filament\Forms;
 use Filament\Forms\Components\Select;
@@ -40,6 +41,11 @@ class UserResource extends Resource
                     ->relationship('client', 'name')
                     ->searchable()
                     ->preload(),
+                Select::make('role_id')
+                    ->label('Ruolo')
+                    ->options(Role::orderBy('label')->pluck('label', 'id'))
+                    ->searchable()
+                    ->preload(),
                 TextInput::make('password')
                     ->password()
                     ->revealable()
@@ -67,6 +73,9 @@ class UserResource extends Resource
                     ->label('Cliente')
                     ->sortable()
                     ->toggleable(),
+                TextColumn::make('role.label')
+                    ->label('Ruolo')
+                    ->sortable(),
                 TextColumn::make('created_at')
                     ->label('Creato il')
                     ->dateTime()
