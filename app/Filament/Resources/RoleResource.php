@@ -61,6 +61,30 @@ class RoleResource extends Resource
             ->bulkActions([
                 Tables\Actions\BulkActionGroup::make([
                     Tables\Actions\DeleteBulkAction::make(),
+                    Tables\Actions\BulkAction::make('insert')
+                        ->label('Inserisci')
+                        ->icon('heroicon-o-document-duplicate')
+                        ->action(function ($records) {
+                            foreach ($records as $record) {
+                                $baseName = $record->name . '_copy';
+                                $newName = $baseName;
+                                $counter = 1;
+                                
+                                // Ensure unique name
+                                while (Role::where('name', $newName)->exists()) {
+                                    $newName = $baseName . '_' . $counter;
+                                    $counter++;
+                                }
+                                
+                                Role::create([
+                                    'name' => $newName,
+                                    'label' => $record->label,
+                                    'is_system' => false,
+                                ]);
+                            }
+                        })
+                        ->requiresConfirmation()
+                        ->deselectRecordsAfterCompletion(),
                 ]),
             ]);
     }
