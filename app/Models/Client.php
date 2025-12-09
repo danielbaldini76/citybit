@@ -12,6 +12,7 @@ class Client extends Model
 
     protected $fillable = [
         'name',
+        'slug',
         'code',
         'vat',
         'address',
@@ -19,6 +20,11 @@ class Client extends Model
         'province',
         'is_active',
     ];
+
+    public function getRouteKeyName(): string
+    {
+        return 'slug';
+    }
 
     public function users(): HasMany
     {
